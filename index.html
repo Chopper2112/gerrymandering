@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+    
+        <div class="banner">
+            <div class="election_dropdown">
+                <label for="touch"><span>ELECTION</span></label>               
+                <input type="checkbox" id="touch"> 
+                <ul class="slide" id="election_options">
+                    <li><a href="#/virginia_house_2021" class="election">Virginia House 2021</a></li> 
+                    <li><a href="#/virginia_house_2019" class="election">Virginia House 2019</a></li> 
+                    <li><a href="#/virginia_senate_2019" class="election">Virginia Senate 2019</a></li>
+                </ul>
+            </div>
+
+            <div class="dataset-heading">
+                <div class="state" id="state"></div>
+                <div class="chamber" id="chamber"></div>
+            </div>
+        </div>
+
+        
+
+        <div class="main-content" id="main">
+            <div class="row">
+
+                <div class="column">
+                    <div class="gerrymander_rating">
+                        <div class="gerrymander_rating_value" id="gerrymander_rating">Loading...</div>
+                        <div class="gerrymander_rating_label">GERRYMANDERED</div>
+                    </div>
+                    <br><br>
+
+                    <div class="section_label">TOTAL VOTES</div>
+                    <div class="row infobox votes_bar">
+                        <div class="bar_segment republican" id="r_segment">REPUBLICAN<br><div class="votes" id="r_votes"></div></div>
+                        <div class="bar_segment democratic" id="d_segment">DEMOCRATIC<br><div class="votes" id="d_votes"></div></div>
+                        <div class="bar_segment other" id="o_segment"><br></div>
+                    </div><br><br>
+
+                    <div class="section_label">POPULATION</div>
+                    <div class="infobox population" style="padding: 1%">
+                        <div class="row">
+                            <div class="subinfobox">TOTAL<div class="population_number" id="total_pop"></div></div>
+                            <div class="subinfobox" id="voted_pop_label">VOTED IN YEAR</div>
+                            <div class="subinfobox">VOTER TURNOUT<div class="population_number" id="vote_turnout"></div></div>
+                            <div class="subinfobox">AVERAGE PER DISTRICT<div class="population_number" id="avg_pop"></div></div>
+                        </div>
+                    </div><br><br>
+                    
+                    <div class="row">
+                        <div class="section_label" id="r_seats" style="font-size: 14px; color:rgb(255, 100, 100);"></div>
+                        <div class="section_label">SEATS</div>
+                        <div class="section_label" id="d_seats" style="font-size: 14px; color:rgb(100,100,255);"></div>
+                    </div>
+                    <div id="seats" class="infobox seats">
+                        <div class="row" id="seat_row_0"></div> 
+                    </div>              
+                    
+                </div>
+
+                
+                
+                
+                <div class="column_divider"></div>
+                
+                
+                
+                
+                <div class="column">
+                    <!-- <div class="console"><textarea readonly id="dev-output" name="dev-output" rows="12" cols="70"></textarea> -->
+                </div>
+            </div>
+        </div>
+        
+    
+    </body>
+    <script src="scripts/main.js"></script>
+</html>

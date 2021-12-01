@@ -1,0 +1,206 @@
+body {
+    background-color: rgb(71, 71, 69);
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 49.5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    background-color: rgb(83, 82, 80);
+}
+
+.column_divider {
+    flex: 1%;
+}
+
+.console {
+    color: red;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.banner { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    background-color: #323636; 
+    width: 100%; 
+  }
+
+.site-heading { 
+    width: 5%;
+    margin: 0 auto; 
+    padding: 10px; 
+    display: inline-block;
+}
+
+.dataset-heading { 
+    width: 30%;
+    margin: 0 auto; 
+    padding: 10px; 
+}
+
+.state {
+    font-family: "Tahoma";
+    font-weight: bold;
+    font-size: 45px;
+    color: hsl(192, 100%, 92%);
+    text-align: center;
+}
+.chamber {
+    font-family: "Tahoma";
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.main-content { 
+    padding-top: 6.5%;
+    display: none;
+}
+
+.infobox {
+    margin: 0 auto;
+    width: 94%;
+    text-align: center;
+    border-width: 2.5px;
+    border-style: solid;
+    border-color: rgb(255, 255, 255);
+    font-size: 20px;
+}
+
+.subinfobox {
+    margin: 0 auto;
+    text-align: center;
+    font-size: 12px;
+    padding: 1%;
+    height: 5%;
+    width: 23%;
+    background-color: rgb(98, 197, 95);
+    font-family: "Tahoma";
+    font-size: 12px;
+    color: #005e08;
+}
+
+.population_number {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.seats {
+    background-color: rgb(190, 190, 190);
+}
+
+.population {
+    background-color: rgb(163, 255, 160);
+}
+
+.votes_bar {
+    font-family: "Tahoma";
+    font-size: 12px;
+}
+
+/* Make sure that padding behaves as expected */
+* {box-sizing:border-box}
+
+.section_label {
+    margin: 0 auto;
+    text-align: center;
+    width: 94%;
+    font-family: "Tahoma";
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.gerrymander_rating {
+    margin: 0 auto;
+    text-align: center;
+    width: 94%;
+    font-family: "Verdana";
+    color: rgb(180, 180, 180);
+}
+
+.gerrymander_rating_value {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.gerrymander_rating_label {
+    font-size: 15px;
+}
+
+.bar_segment {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
+}
+
+.democratic {width: 50%; background-color: #2196F3;}
+.republican {width: 50%; background-color: #f44336;}
+.other {width: 0%; background-color: #808080;}
+
+.votes {
+    font-family: "Tahoma";
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.election_dropdown {
+    position: absolute;
+    padding: 10px;
+    font-family: "Arial";
+    font-size: 20px;
+}
+
+
+h1 {padding: 40px; text-align: center; font-size: 1.5em;}
+
+li a {text-decoration : none; color : #2d2f31;}
+
+
+span {
+    padding : 10px;
+    background : #6d6f72; 
+    color : hsl(192, 100%, 92%);
+    cursor : pointer;
+    display: block;
+}
+
+span::after {
+    float: right;
+    right: 10%;
+    content: "\25BC";
+}
+
+.slide {
+    clear:both;
+    width:100%;
+    height:0px;
+    overflow: hidden;
+    text-align: center;
+    transition: height .25s ease;
+    background-color: #898a8d;
+    font-size: 12px;
+    text-align: left;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.slide li {padding : 5px; color: white;}
+
+#touch {position: absolute; opacity: 0; height: 0px;}    
+
+#touch:checked + .slide {height: 75px;} 
+
+.election {
+    color: white;
+}
