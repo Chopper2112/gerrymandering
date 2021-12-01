@@ -117,4 +117,4 @@ window.onhashchange = function() {
 
 // Load page
 gerrymander_rating = 25
-loadPage(window.location.href.substring(window.location.href.indexOf("#")+1))
+loadPage(window.location.href.substring(window.location.href.indexOf("#/")+1))
