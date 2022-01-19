@@ -29,10 +29,10 @@ function loadJSON(filename, callback) {
   xobj.send(null);
 }
 
-function loadPage(election) {
+function loadPage(state, election) {
 
   // Load election information from json
-  loadJSON('output/'+election+'.json', function(response) {
+  loadJSON('output/'+state+'/'+election+'.json', function(response) {
     data = JSON.parse(response)
 
     // Create webpage
@@ -40,10 +40,11 @@ function loadPage(election) {
     document.getElementById("chamber").innerHTML = data["metadata"]["chamber"] +" &mdash; "+ data["metadata"]["year"]
 
     // Set gerrymandering rating
-    document.getElementById("gerrymander_rating").innerHTML = gerrymander_rating+"%"
-    if(gerrymander_rating < 20) { document.getElementById("gerrymander_rating").style.color = "lime" }
-    else if(gerrymander_rating < 50) { document.getElementById("gerrymander_rating").style.color = "yellow" }
-    else if(gerrymander_rating >= 50) { document.getElementById("gerrymander_rating").style.color = "red" }
+    gerrymander_rating = data["gerrymandering"]["test2"]["t_value"].toFixed(2)
+    document.getElementById("gerrymander_rating").innerHTML = gerrymander_rating
+    if(gerrymander_rating < 1) { document.getElementById("gerrymander_rating").style.color = "lime" }
+    else if(gerrymander_rating < 5) { document.getElementById("gerrymander_rating").style.color = "yellow" }
+    else if(gerrymander_rating >= 5) { document.getElementById("gerrymander_rating").style.color = "red" }
 
     // Create votes bar
     document.getElementById("r_segment").style.width = data["votes"]["Republican_%"]+"%"
@@ -52,7 +53,6 @@ function loadPage(election) {
     document.getElementById("r_votes").innerHTML = data["votes"]["Republican_%"]+"% &mdash; "+addNumCommas(data["votes"]["Republican"])
     document.getElementById("d_votes").innerHTML = data["votes"]["Democratic_%"]+"% &mdash; "+addNumCommas(data["votes"]["Democratic"])
     if(data["votes"]["Other_%"] > 5) { document.getElementById("o_segment").innerHTML = "OTHER" }
-
 
     // Create seats graphics
     templateSeat = document.createElement('img')
@@ -109,12 +109,15 @@ function loadPage(election) {
   })
 }
 
+election = window.location.href.substring(window.location.href.indexOf("#/")+5)
+state = window.location.href.substring(window.location.href.indexOf("#/")+2,window.location.href.indexOf("#/")+4)
+
 // Change page if different election is selected
 window.onhashchange = function() { 
-  election = window.location.href.substring(window.location.href.indexOf("#/")+1)
+  election = window.location.href.substring(window.location.href.indexOf("#/")+5)
+  state = window.location.href.substring(window.location.href.indexOf("#/")+2,window.location.href.indexOf("#/")+4)
   location.reload()
 }
 
 // Load page
-gerrymander_rating = 25
-loadPage(window.location.href.substring(window.location.href.indexOf("#/")+1))
+loadPage(state, election)
