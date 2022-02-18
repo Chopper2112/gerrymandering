@@ -1,7 +1,3 @@
-function log(text) {
-  document.getElementById('dev-output').value += text+'\n';
-}
-
 function addNumCommas(num) {
   num = num+""
   newNum = num[num.length-1]
@@ -19,7 +15,7 @@ function addNumCommas(num) {
 // https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
 function loadJSON(filename, callback) {
   var xobj = new XMLHttpRequest();
-    xobj.overrideMimeType("application/json");
+  xobj.overrideMimeType("application/json");
   xobj.open('GET', filename, true); 
   xobj.onreadystatechange = function () {
     if (xobj.readyState == 4 && xobj.status == "200") {
@@ -29,7 +25,67 @@ function loadJSON(filename, callback) {
   xobj.send(null);
 }
 
+states = {
+  'VA': {'lat': 37.83, 'lng': -79.45, 'zoom': 6.85 }
+}
+
+state = 'VA'
+stateLat = states[state]['lat']
+stateLng = states[state]['lng']
+stateZoom = states[state]['zoom']
+partyColor = {"Republican": "red", "Democratic": "blue"}
+
+// Apply state data
+function loadStateMap(map) {
+ 
+  // Center and zoom map on state
+  map.setCenter({lat:stateLat, lng:stateLng});
+  map.setZoom(stateZoom);
+
+  // Load districts overlay
+  loadJSON('geodata.json', function(response) {
+    geodata = JSON.parse(response)
+    features = map.data.addGeoJson(geodata)
+
+    // Set color of district based on party
+    features.forEach(feature => {
+      districtID = parseInt(feature.getProperty("SLDLST"))+""
+      map.data.overrideStyle(feature, {fillColor:partyColor[data["districts"][districtID]["winner"]]})
+    })
+  })
+
+  // Style overlay
+  map.data.setStyle({
+    strokeColor: 'black',
+    fillOpacity: 0.5,
+    strokeWeight: 1,
+  });  
+}
+
+// Create map
+function initMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+    mapId: '4f69a9ead9eb85cc',
+    center: {lat:stateLat, lng:stateLng},
+    zoom: stateZoom,
+    disableDefaultUI: true,
+    zoomControl: false,
+    minZoom: stateZoom,
+    maxZoom: stateZoom+6,
+    gestureHandling: 'cooperating', //set to none to disable zooming/panning
+    restriction: {
+      latLngBounds: {
+        north: stateLat+3,
+        south: stateLat-3,
+        east: stateLng+5,
+        west: stateLng-5,
+      },
+    },
+  });
+}
+
 function loadPage(state, election) {
+  data = null
 
   // Load election information from json
   loadJSON('output/'+state+'/'+election+'.json', function(response) {
@@ -40,7 +96,8 @@ function loadPage(state, election) {
     document.getElementById("chamber").innerHTML = data["metadata"]["chamber"] +" &mdash; "+ data["metadata"]["year"]
 
     // Set gerrymandering rating
-    gerrymander_rating = data["gerrymandering"]["test2"]["t_value"].toFixed(2)
+    gerrymander_rating = '0'
+    // gerrymander_rating = data["gerrymandering"]["score"].toFixed(2)
     document.getElementById("gerrymander_rating").innerHTML = gerrymander_rating
     if(gerrymander_rating < 1) { document.getElementById("gerrymander_rating").style.color = "lime" }
     else if(gerrymander_rating < 5) { document.getElementById("gerrymander_rating").style.color = "yellow" }
@@ -102,11 +159,13 @@ function loadPage(state, election) {
     document.getElementById("voted_pop").innerHTML = addNumCommas(data["votes"]["total"])
     document.getElementById("vote_turnout").innerHTML = data["voter_turnout_%"]+"%"
     document.getElementById("avg_pop").innerHTML = addNumCommas(data["avg_population"])
-  
+
     // Make page visible
     document.getElementById("main").style.display = "block"
 
   })
+
+  return data
 }
 
 election = window.location.href.substring(window.location.href.indexOf("#/")+5)
@@ -119,5 +178,10 @@ window.onhashchange = function() {
   location.reload()
 }
 
+// Load state map
+window.onload = function() {
+  loadStateMap(map);
+}
+
 // Load page
-loadPage(state, election)
+data = loadPage(state, election)

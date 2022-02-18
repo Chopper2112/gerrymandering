@@ -15,16 +15,11 @@
                     <li><a href="#/PA_2020_Upper" class="election">Pennsylvania Senate 2020</a></li> 
                     <li><a href="#/VA_2019_Lower" class="election">Virginia House 2019</a></li> 
                     <li><a href="#/VA_2019_Upper" class="election">Virginia Senate 2019</a></li>
+                    <li><a href="#/MD_2018_Lower" class="election">Maryland House 2018</a></li>
+                    <li><a href="#/MD_2018_Upper" class="election">Maryland Senate 2018</a></li>
                     <li><a href="#/VA_2017_Lower" class="election">Virginia House 2017</a></li>
                     <li><a href="#/VA_2015_Lower" class="election">Virginia House 2015</a></li>
                     <li><a href="#/VA_2015_Upper" class="election">Virginia Senate 2015</a></li>
-                    <li><a href="#/VA_2013_Lower" class="election">Virginia House 2013</a></li>
-                    <li><a href="#/VA_2011_Lower" class="election">Virginia House 2011</a></li>
-                    <li><a href="#/VA_2011_Upper" class="election">Virginia Senate 2011</a></li>
-                    <li><a href="#/VA_2009_Lower" class="election">Virginia House 2009</a></li>
-                    <li><a href="#/VA_2007_Lower" class="election">Virginia House 2007</a></li>
-                    <li><a href="#/VA_2007_Upper" class="election">Virginia Senate 2007</a></li>
-                    <li><a href="#/VA_2005_Lower" class="election">Virginia House 2005</a></li>
                 </ul>
             </div>
 
@@ -42,7 +37,7 @@
                 <div class="column">
                     <div class="gerrymander_rating">
                         <div class="gerrymander_rating_value" id="gerrymander_rating">Loading...</div>
-                        <div class="gerrymander_rating_label">LOPSIDEDNESS T-SCORE</div>
+                        <div class="gerrymander_rating_label">GERRYMANDERING SCORE</div>
                     </div>
                     <br><br>
 
@@ -83,7 +78,25 @@
                 
                 
                 <div class="column">
-                    <!-- <div class="console"><textarea readonly id="dev-output" name="dev-output" rows="12" cols="70"></textarea> -->
+                    <html>
+                        <head>
+                          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+                          <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+                          
+                          <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+                          <script type="text/javascript" src='./test-credentials.js'></script>    
+                          <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+                          <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+                          <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+                          <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+                        </head>
+                        <body id="markers-on-the-map">
+                          <div id="map" class="center"></div>
+                          <script async
+                            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfF_G25RpaXsHkBsG_Xi-2TknUPhfX1Jw&callback=initMap">
+                          </script>
+                        </body>
+                      </html>
                 </div>
             </div>
         </div>

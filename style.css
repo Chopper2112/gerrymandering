@@ -198,8 +198,23 @@ span::after {
 
 #touch {position: absolute; opacity: 0; height: 0px;}    
 
-#touch:checked + .slide {height: 358px;}  
+#touch:checked + .slide {height: 238px;}  
 
 .election {
     color: white;
+}
+
+#map {
+    width: 96%;
+    height: 100%;
+}
+
+#panel {
+    width: 100%;
+    height: 100%;
+}
+
+.center {
+    margin: auto;
+    padding: 10px;
 }
