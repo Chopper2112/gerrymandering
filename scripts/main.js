@@ -25,33 +25,37 @@ function loadJSON(filename, callback) {
   xobj.send(null);
 }
 
-states = {
-  'VA': {'lat': 37.83, 'lng': -79.45, 'zoom': 6.85 }
+function processPoints(geometry, callback, thisArg) {
+  if (geometry instanceof google.maps.LatLng) {
+    callback.call(thisArg, geometry);
+  } else if (geometry instanceof google.maps.Data.Point) {
+    callback.call(thisArg, geometry.get());
+  } else {
+    geometry.getArray().forEach(function(g) {
+      processPoints(g, callback, thisArg);
+    });
+  }
 }
 
-state = 'VA'
-stateLat = states[state]['lat']
-stateLng = states[state]['lng']
-stateZoom = states[state]['zoom']
-partyColor = {"Republican": "red", "Democratic": "blue"}
-
 // Apply state data
-function loadStateMap(map) {
- 
-  // Center and zoom map on state
-  map.setCenter({lat:stateLat, lng:stateLng});
-  map.setZoom(stateZoom);
+var features = null
+function loadStateMap(state, election, map) {
+  try { removeMap(map, features) } catch {}
+  partyColor = {"Republican": "red", "Democratic": "blue", "Other": "gray"}
 
   // Load districts overlay
-  loadJSON('geodata.json', function(response) {
+  loadJSON('input/'+state+'/'+election+'.json', function(response) {
     geodata = JSON.parse(response)
     features = map.data.addGeoJson(geodata)
 
     // Set color of district based on party
     features.forEach(feature => {
-      districtID = parseInt(feature.getProperty("SLDLST"))+""
-      map.data.overrideStyle(feature, {fillColor:partyColor[data["districts"][districtID]["winner"]]})
+      try {
+        districtID = parseInt(feature.getProperty("SLD"+election[5]+"ST"))+""
+        map.data.overrideStyle(feature, {fillColor:partyColor[data["districts"][districtID]["winner"]]})
+      } catch {}
     })
+    map.setZoom(map.zoom*1.05)
   })
 
   // Style overlay
@@ -63,25 +67,137 @@ function loadStateMap(map) {
 }
 
 // Create map
+var infowindow = null
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     mapId: '4f69a9ead9eb85cc',
-    center: {lat:stateLat, lng:stateLng},
-    zoom: stateZoom,
+    center: {lat:39.83, lng:-98.58},
+    zoom: 4,
     disableDefaultUI: true,
     zoomControl: false,
-    minZoom: stateZoom,
-    maxZoom: stateZoom+6,
     gestureHandling: 'cooperating', //set to none to disable zooming/panning
-    restriction: {
-      latLngBounds: {
-        north: stateLat+3,
-        south: stateLat-3,
-        east: stateLng+5,
-        west: stateLng-5,
-      },
-    },
   });
+  
+  var bounds = new google.maps.LatLngBounds();
+  map.data.addListener('addfeature', function(e) {
+    processPoints(e.feature.getGeometry(), bounds.extend, bounds);
+    map.fitBounds(bounds);
+  });
+
+  // zoom to the clicked feature
+  map.data.addListener('click', function(e) {
+    var bounds = new google.maps.LatLngBounds();
+    processPoints(e.feature.getGeometry(), bounds.extend, bounds);
+    map.fitBounds(bounds);
+    if(infowindow) { infowindow.close() }
+
+    districtID = parseInt(e.feature.getProperty("SLD"+election[5]+"ST"))
+    info = '<b>District '+districtID+'</b><br>';
+    district = data["districts"][districtID];
+    if(district) {
+      info += data["metadata"]["state"]+" "+data["metadata"]["chamber"]+" ("+data["metadata"]["year"]+")" +
+      "<br>Population: "+addNumCommas(district["population"]) +
+      "<br>Republican Vote: "+district["Republican_%"]+"%" +
+      "<br>Democratic Vote: "+district["Democratic_%"]+"%" +
+      "<br>Other Vote: "+district["Other_%"]+"%";
+    } else { info += '<i>No election data</i>' }
+
+
+    infowindow = new google.maps.InfoWindow({content:info, position:e.latLng})
+    infowindow.open({
+      anchor: null,
+      map,
+      shouldFocus: false
+    })
+  });
+}
+
+
+// Apply new state data
+function loadNewStateMap() {
+  try { removeMap(map, features) } catch {}
+  
+  // Load districts overlay
+  loadJSON('Virginia_Geo_2020.json', function(response) {
+    geodata = JSON.parse(response)
+    features = map.data.addGeoJson(geodata)
+
+    // Set color of district based on party
+    features.forEach(feature => {
+      try {
+        map.data.overrideStyle(feature, {fillColor:feature.getProperty("COLOR"),fillOpacity:1})
+        map.data.overrideStyle(feature, {strokeColor:feature.getProperty("COLOR"),strokeOpacity:1})
+      } catch {}
+    })
+    map.setZoom(map.zoom*1.05)
+  })
+
+  // Style overlay
+  map.data.setStyle({
+    strokeColor: 'black',
+    fillOpacity: 0.5,
+    strokeWeight: 1,
+  });  
+}
+
+// Create new map
+function initNewMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+    mapId: '12676961b9ca984f',
+    center: {lat:39.83, lng:-98.58},
+    zoom: 4,
+    disableDefaultUI: true,
+    zoomControl: false,
+    gestureHandling: 'cooperating', //set to none to disable zooming/panning
+  });
+  
+  var bounds = new google.maps.LatLngBounds();
+  map.data.addListener('addfeature', function(e) {
+    processPoints(e.feature.getGeometry(), bounds.extend, bounds);
+    map.fitBounds(bounds);
+  });
+
+  // zoom to the clicked feature
+  map.data.addListener('click', function(e) {
+    // var bounds = new google.maps.LatLngBounds();
+    // processPoints(e.feature.getGeometry(), bounds.extend, bounds);
+    // map.fitBounds(bounds);
+    
+    
+    // Info Window
+    if(infowindow) { infowindow.close() }
+    districtID = parseInt(e.feature.getProperty("ID"))
+    info = '<b>Subdivision '+districtID+'</b>' +
+            "<br>District: "+e.feature.getProperty("DISTRICT") +
+            "<br>Population: "+e.feature.getProperty("POP") +
+            "<br>Origin: "+e.feature.getProperty("ORIGIN")
+            "<br>District Pop: "+e.feature.getProperty("DISTRICT_POP")
+
+    infowindow = new google.maps.InfoWindow({content:info, position:e.latLng})
+    infowindow.open({
+      anchor: null,
+      map,
+      shouldFocus: false
+    })
+  });
+
+  // loadNewStateMap(map)    uncomment when not debugging
+}
+
+function toggleMap() {
+  toggled = document.getElementById("mapSwitch").checked
+  if(toggled) {
+    loadNewStateMap()
+  }
+  else {
+    loadStateMap(state, election, map)
+  }
+}
+
+function removeMap(map, features) {
+  for(let i = 0; i < features.length; i++) {
+    map.data.remove(features[i])
+  }
 }
 
 function loadPage(state, election) {
@@ -96,12 +212,16 @@ function loadPage(state, election) {
     document.getElementById("chamber").innerHTML = data["metadata"]["chamber"] +" &mdash; "+ data["metadata"]["year"]
 
     // Set gerrymandering rating
-    gerrymander_rating = '0'
-    // gerrymander_rating = data["gerrymandering"]["score"].toFixed(2)
+    try { gerrymander_rating = data["gerrymandering"]["score"].toFixed(2) }
+    catch {  gerrymander_rating = 0 }
+    majority = data["majority"]
+
     document.getElementById("gerrymander_rating").innerHTML = gerrymander_rating
-    if(gerrymander_rating < 1) { document.getElementById("gerrymander_rating").style.color = "lime" }
-    else if(gerrymander_rating < 5) { document.getElementById("gerrymander_rating").style.color = "yellow" }
-    else if(gerrymander_rating >= 5) { document.getElementById("gerrymander_rating").style.color = "red" }
+    // if(gerrymander_rating < 1) { document.getElementById("gerrymander_rating").style.color = "lime" }
+    // else if(gerrymander_rating < 3) { document.getElementById("gerrymander_rating").style.color = "yellow" }
+    // else if(gerrymander_rating >= 5) { document.getElementById("gerrymander_rating").style.color = "red" }
+    if(majority == "Republican") { document.getElementById("gerrymander_rating").style.color = "red" }
+    if(majority == "Democratic") { document.getElementById("gerrymander_rating").style.color = "aqua" }
 
     // Create votes bar
     document.getElementById("r_segment").style.width = data["votes"]["Republican_%"]+"%"
@@ -180,7 +300,7 @@ window.onhashchange = function() {
 
 // Load state map
 window.onload = function() {
-  loadStateMap(map);
+  loadStateMap(state, election, map);
 }
 
 // Load page

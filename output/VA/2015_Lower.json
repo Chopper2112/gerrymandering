@@ -10,6 +10,13 @@
             "Republican_win_mean": 70.02555555555556,
             "Democratic_win_mean": 70.37363636363636,
             "favored": "Republican"
+        },
+        "test3": {
+            "delta": 0.8656939799194626,
+            "sigma": 0.7354407925141176,
+            "meanMedDif": 0.6366666666666703,
+            "includesUncontested": false,
+            "favored": "Democratic"
         }
     },
     "seats": {
@@ -992,7 +999,7 @@
             "population": 79386,
             "total_votes": 352,
             "voter_turnout_%": 0.4,
-            "winner": "Tie",
+            "winner": "Other",
             "Republican_%": 0.0,
             "Democratic_%": 0.0,
             "Other_%": 100.0,

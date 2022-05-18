@@ -10,6 +10,13 @@
             "Republican_win_mean": 68.735,
             "Democratic_win_mean": 71.33195652173913,
             "favored": "Republican"
+        },
+        "test3": {
+            "delta": 0.3410439693981549,
+            "sigma": 0.7916867742199809,
+            "meanMedDif": 0.2700000000000031,
+            "includesUncontested": false,
+            "favored": "Democratic"
         }
     },
     "seats": {
